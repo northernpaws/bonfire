@@ -1,0 +1,46 @@
+[package]
+name = "bonfire"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "bonfire"
+
+
+[dependencies]
+anstyle = "^1.0"
+askama = "0.15.4"
+axum = { version = "0.8.8", features = ["ws"] }
+axum-extra = { version = "0.12.5", features = [
+    "tracing",
+    "cookie",
+    "cookie-signed",
+    "cookie-key-expansion",
+    "form",
+    "file-stream",
+    "middleware",
+    "multipart",
+    "protobuf",
+] }
+clap = { version = "^4.0", default-features = false, features = [
+    "std",
+    "color",
+    "help",
+    "usage",
+    "unicode",
+    "wrap_help",
+    "cargo",
+    "derive",
+    "suggestions",
+] }
+cookie = "0.18.1"
+dotenv = "0.15.0"
+fjall = "3.0.2"
+oauth2 = { version = "5.0.0", features = ["reqwest-blocking"] }
+rustrtc = "0.3.22"
+serde = "1.0.228"
+tachyonix = "0.3.1"
+tantivy = "0.25.0"
+tokio = { version = "1.49.0", features = ["rt", "rt-multi-thread", "tracing"] }
+tracing = { version = "0.1.44", features = ["attributes"] }
+tracing-subscriber = "0.3.22"

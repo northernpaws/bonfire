@@ -1,0 +1,14 @@
+<!doctype html>
+<html>
+
+<head>
+</head>
+
+<body>
+    <h1>Login Using:</h1>
+    {% for provider in oauth2_providers %}
+    <a href="/oauth2/{{provider.id}}">{{ provider.label }}</a>
+    {% endfor %}
+</body>
+
+</html>

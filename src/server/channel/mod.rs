@@ -1,0 +1,23 @@
+use tokio::sync::broadcast;
+
+/// Indicates the type of a channel.
+pub enum ChannelType {
+    Text,
+    Voice,
+}
+
+/// Generic trait for channel types.
+pub trait Channel {
+    type Event;
+
+    fn channel_type(&self) -> ChannelType;
+
+    /// Returns the user-friendly label for the channel.
+    fn get_label(&self) -> &str;
+
+    /// Returns a subscriber for receiving channel events.
+    fn subscribe(&self) -> broadcast::Receiver<Self::Event>;
+}
+
+pub mod text;
+pub mod voice;
