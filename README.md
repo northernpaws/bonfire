@@ -2,7 +2,7 @@
 
 A self-hosted, open-source, decentralized community platform for text and voice communication.
 
-**insert links and badges**
+[![Book](https://github.com/northernpaws/bonfire/actions/workflows/book.yaml/badge.svg)](https://github.com/northernpaws/bonfire/actions/workflows/book.yaml)
 
 ## Overview 
 
