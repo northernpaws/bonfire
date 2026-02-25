@@ -24,7 +24,9 @@ jobs:
         curl -sSL $url | tar -xz --directory=bin
         echo "$(pwd)/bin" >> $GITHUB_PATH
     - name: Run tests
-      run: mdbook test
+      run: |
+        cd book
+        mdbook test
 
   build:
     needs: test
