@@ -11,6 +11,7 @@ use axum::{
 use crate::server::{Server, channel::Channel};
 
 pub mod client;
+pub mod gateway;
 pub mod oauth2;
 
 /// Provides the shared state for the app router.
@@ -35,6 +36,8 @@ pub fn make_app_router(server: Arc<Server>) -> Router {
         .route("/oauth/{provider}", any(oauth2::handle_redirect))
         // Callback from a user successfully authenticating with a provider.
         .route("/oauth/{provider}/callback", any(oauth2::handle_callback))
+        // Gateway websocket used for server to client communications.
+        .route("/gateway", post(gateway::ws_handler))
         .with_state(state)
 }
 

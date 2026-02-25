@@ -6,7 +6,7 @@ use tokio::sync::broadcast;
 
 use crate::server::{
     channel::text::search::{
-        SCHEMA_KEY_AUTHOR, SCHEMA_KEY_BODY, SCHEMA_KEY_TIMESTAMP, text_search_schema,
+        SCHEMA_KEY_AUTHOR, SCHEMA_KEY_CONTENT, SCHEMA_KEY_TIMESTAMP, text_search_schema,
     },
     user::UserID,
 };
@@ -22,7 +22,7 @@ pub struct TextChannelMessage {
     /// Timestamp in milliseconds.
     pub timestamp_ms: u64,
     /// Text body of the message.
-    pub body: String,
+    pub content: String,
 }
 
 /// These are sent to a channel to tell it to do something.
@@ -140,7 +140,7 @@ impl TextChannel {
             keyspace.clone(),
             index_writer,
             schema.get_field(SCHEMA_KEY_TIMESTAMP).unwrap(),
-            schema.get_field(SCHEMA_KEY_BODY).unwrap(),
+            schema.get_field(SCHEMA_KEY_CONTENT).unwrap(),
             schema.get_field(SCHEMA_KEY_AUTHOR).unwrap(),
             event_sender,
         ));

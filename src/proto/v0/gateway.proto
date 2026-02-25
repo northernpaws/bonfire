@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package v0.gateway;
+
+// Message sent from the gateway to a client when it connects to
+// acknowledge the connection and indicate server capabilities.
+message GatewayHandshake {
+    // Indicates the semver of the server.
+    string version = 1;
+}
+
+// Message sent from the client to the gateway to identify it's self.
+message GatewayIdentify {
+    enum ClientType {
+        UNKNOWN = 0;
+        WEB = 1;
+        NATIVE = 2;
+    }
+
+    // Identifies the type of the client.
+    ClientType client_type = 1;
+
+    // User-agent like string identifying what the client is.
+    string client_agent = 2;
+}
+
+// An event sent from the gateway to connected clients.
+message GatewayServerEvent {
+    // The actual event.
+    //
+    // The JSON representation injects a "type"
+    // field used to identify the variant.
+    oneof event {
+        string message = 1;
+    }
+}
+
+// An event sent from a connected client to the server.
+message GatewayClientEvent {
+    // The actual event.
+    //
+    // The JSON representation injects a "type"
+    // field used to identify the variant.
+    oneof event {
+        string message = 1;
+    }
+}
+
+// Represents a chat message in a text channel.
+message Message {
+    // Unique ID of the message.
+    fixed64 id = 1;
+    // ID of the channel the message is in.
+    fixed64 channel_id = 2;
+    // Text content of the message.
+    string content  = 3;
+}

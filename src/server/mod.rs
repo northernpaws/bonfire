@@ -9,10 +9,12 @@ use fjall::Database;
 use crate::server::{
     auth::AuthService,
     channel::text::{TextChannel, TextChannelError},
+    client::ClientService,
 };
 
 pub mod auth;
 pub mod channel;
+pub mod client;
 pub mod user;
 
 /// An event that occures on a server.
@@ -36,7 +38,10 @@ pub struct Server {
     /// FSM-tree database for storing the time-series channel messages.
     db: fjall::Database,
 
-    auth: Arc<AuthService>,
+    /// Service for managing user authentication.
+    auth: Arc<RwLock<AuthService>>,
+    /// Service for managing connections to clients.
+    clients: Arc<RwLock<ClientService>>,
 
     /// A hashmap of the available channels on the server.
     text_channels: RwLock<HashMap<u64, Arc<TextChannel>>>,
@@ -69,19 +74,29 @@ impl Server {
             .open()
             .map_err(|e| Error::DatabaseError(e))?;
 
-        let auth = Arc::new(AuthService::new(config.auth.clone()));
+        // Construct the service for managing user authentication.
+        let auth = Arc::new(RwLock::new(AuthService::new(config.auth.clone())));
+
+        // Construct the service for managing connected client sessions.
+        let clients = Arc::new(RwLock::new(ClientService::new()));
 
         Ok(Self {
             config,
             db,
             auth,
+            clients,
             text_channels: RwLock::new(HashMap::new()),
         })
     }
 
     /// Returns a handle to the auth service.
-    pub fn auth(&self) -> Arc<AuthService> {
+    pub fn auth(&self) -> Arc<RwLock<AuthService>> {
         Arc::clone(&self.auth)
+    }
+
+    /// Returns a handle to the client service.
+    pub fn clients(&self) -> Arc<RwLock<ClientService>> {
+        Arc::clone(&self.clients)
     }
 
     /// Create a new text channel on the server.

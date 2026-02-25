@@ -21,7 +21,9 @@ axum-extra = { version = "0.12.5", features = [
     "middleware",
     "multipart",
     "protobuf",
+    "typed-header",
 ] }
+chrono = "0.4.44"
 clap = { version = "^4.0", default-features = false, features = [
     "std",
     "color",
@@ -36,11 +38,23 @@ clap = { version = "^4.0", default-features = false, features = [
 cookie = "0.18.1"
 dotenv = "0.15.0"
 fjall = "3.0.2"
+futures = "0.3.32"
 oauth2 = { version = "5.0.0", features = ["reqwest-blocking"] }
+prost = "0.14.3"
+prost-types = "0.14.3"
 rustrtc = "0.3.22"
+schemars = "1.2.1"
 serde = "1.0.228"
+serde_json = "1.0.149"
+serde_path_to_error = "0.1.20"
+snowflaked = "1.0.3"
 tachyonix = "0.3.1"
 tantivy = "0.25.0"
 tokio = { version = "1.49.0", features = ["rt", "rt-multi-thread", "tracing"] }
+tower-http = "0.6.8"
 tracing = { version = "0.1.44", features = ["attributes"] }
 tracing-subscriber = "0.3.22"
+valuable = { version = "0.1.1", features = ["derive"] }
+
+[build-dependencies]
+prost-build = "0.14.3"

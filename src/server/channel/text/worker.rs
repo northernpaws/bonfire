@@ -11,7 +11,7 @@ pub async fn channel_worker(
     keyspace: fjall::Keyspace,
     index_writer: tantivy::IndexWriter,
     field_timestamp: tantivy::schema::Field,
-    field_body: tantivy::schema::Field,
+    field_content: tantivy::schema::Field,
     field_author: tantivy::schema::Field,
     event_notifier: broadcast::Sender<TextChannelEvent>,
 ) {
@@ -33,7 +33,8 @@ pub async fn channel_worker(
         match action {
             TextChannelAction::MessageCreated(msg) => {
                 // Store the message in the FSM-tree time-series database.
-                if let Err(err) = keyspace.insert(msg.timestamp_ms.to_be_bytes(), msg.body.clone())
+                if let Err(err) =
+                    keyspace.insert(msg.timestamp_ms.to_be_bytes(), msg.content.clone())
                 {
                     tracing::error!(%err, "failed to insert message to keyspace")
                 }
@@ -44,7 +45,7 @@ pub async fn channel_worker(
                     field_timestamp,
                     DateTime::from_timestamp_secs(msg.timestamp_ms as i64),
                 );
-                document.add_text(field_body, msg.body.clone());
+                document.add_text(field_content, msg.content.clone());
                 document.add_u64(field_author, msg.author);
 
                 // Write the full-text search log entry.

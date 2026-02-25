@@ -22,7 +22,7 @@ pub async fn handle_redirect(
     let auth = state.read().unwrap().server.auth();
 
     // Generate an authorization URL for the request.
-    let Some(authorize_url) = auth.oauth2_authorize_web(
+    let Some(authorize_url) = auth.read().unwrap().oauth2_authorize_web(
         provider.clone(),
         &format!("http://localhost:3000/oauth2/{provider}/callback"),
     ) else {
@@ -52,7 +52,11 @@ pub async fn handle_callback(
     let state = CsrfToken::new(query.0.state);
 
     // Attempt to exchange the code and state for a local auth token.
-    let Some(token) = auth.oauth2_code_exchange_web(provider, code, state) else {
+    let Some(token) = auth
+        .read()
+        .unwrap()
+        .oauth2_code_exchange_web(provider, code, state)
+    else {
         return StatusCode::INTERNAL_SERVER_ERROR.into_response();
     };
 
@@ -73,8 +77,7 @@ pub async fn handle_callback(
         .build();
 
     // Add the cookie to the response.
-    jar.add(cookie);
-
+    //
     // Redirect use back to the web client.
-    Redirect::temporary("/client").into_response()
+    (jar.add(cookie), Redirect::temporary("/client")).into_response()
 }

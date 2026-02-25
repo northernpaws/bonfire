@@ -2,7 +2,7 @@ use tantivy::schema::Schema;
 
 // keys used for the full-text schema fields.
 pub const SCHEMA_KEY_TIMESTAMP: &str = "timestamp";
-pub const SCHEMA_KEY_BODY: &str = "body";
+pub const SCHEMA_KEY_CONTENT: &str = "content";
 pub const SCHEMA_KEY_AUTHOR: &str = "author";
 
 /// Builds the schema used by the full text search database.
@@ -29,7 +29,7 @@ pub fn text_search_schema() -> Schema {
     // the LSM time series database by their timestamps for speed.
     // Retriving stored documents from the text search engine is slow.
     schema_builder.add_text_field(
-        SCHEMA_KEY_BODY,
+        SCHEMA_KEY_CONTENT,
         tantivy::schema::TEXT | tantivy::schema::STORED,
     );
 
