@@ -1,10 +1,10 @@
-name: Book
+name: Docs
 
 on:
   push:
     branches: ['main']
     paths:
-      - book/**
+      - docs/**
       - .github/**
   pull_request:
 
@@ -28,7 +28,7 @@ jobs:
         echo "$(pwd)/bin" >> $GITHUB_PATH
     - name: Run tests
       run: |
-        cd book
+        cd docs
         mdbook test
 
   build:
@@ -47,12 +47,12 @@ jobs:
           echo `pwd`/mdbook >> $GITHUB_PATH
       - name: Build Book
         run: |
-          cd book
+          cd docs
           mdbook build
       - uses: actions/upload-artifact@v4
         with:
-          name: book
-          path: book/book
+          name: bdocsk
+          path: docs/book
   
   deploy:
     needs: build
@@ -72,8 +72,8 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          name: book
-          path: book
+          name: docs
+          path: bdocsk
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
@@ -82,7 +82,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload entire repository
-          path: 'book'
+          path: 'docs'
 
       - name: Deploy to GitHub Pages
         id: deployment

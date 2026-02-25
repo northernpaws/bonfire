@@ -22,6 +22,10 @@ fn main() -> Result<()> {
         "#[serde(tag = \"type\")]",
     );
 
+    // Generate the descriptor path so we can use it for API docs generation.
+    let descriptor_path = std::path::Path::new("book/proto/".into()).join("descriptor_set.pb");
+    config.file_descriptor_set_path(&descriptor_path);
+
     // Compile the specified protobuf files into Rust code.
     config.compile_protos(&["src/proto/v0/gateway.proto"], &["src/proto"])?;
 

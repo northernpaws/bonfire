@@ -129,6 +129,9 @@ async fn handle_socket(
         return;
     };
 
+    // TODO: Support a "Resume" message to allow a client to recall an existing
+    //       session cached on the server instead of creating a new one.
+
     tracing::info!(
         encoding_test = ?encoding,
         who = ?who,
