@@ -2,7 +2,7 @@
 
 The gateway is a WebSocket endpoint that a client connects to for exchanging events between the client and the server.
 
-```
+```,ignore
 ws(s)://<url>/gateway
 ```
 
