@@ -35,12 +35,16 @@ clap = { version = "^4.0", default-features = false, features = [
     "derive",
     "suggestions",
 ] }
+color-eyre = "0.6.5"
 cookie = "0.18.1"
 dotenv = "0.15.0"
 fjall = "3.0.2"
 futures = "0.3.32"
+log = "0.4.29"
+mdbook-driver = "0.5.2"
 oauth2 = { version = "5.0.0", features = ["reqwest-blocking"] }
 prost = "0.14.3"
+prost-build = "0.14.3"
 prost-types = "0.14.3"
 rustrtc = "0.3.22"
 schemars = "1.2.1"
@@ -58,3 +62,6 @@ valuable = { version = "0.1.1", features = ["derive"] }
 
 [build-dependencies]
 prost-build = "0.14.3"
+
+[dev-dependencies]
+mdbook-driver = "0.5.2"

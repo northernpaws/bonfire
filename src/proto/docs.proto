@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+import "google/protobuf/descriptor.proto";
+
+// Defines custom option types used for building the docs.
+extend google.protobuf.FileOptions {
+  string doc_title = 50000;
+  string doc_category = 50001;
+}

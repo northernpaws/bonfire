@@ -2,6 +2,11 @@ syntax = "proto3";
 
 package v0.gateway;
 
+import "docs.proto";
+
+option (doc_title) = "Gateway v0";
+option (doc_category) = "Gateway";
+
 // Message sent from the gateway to a client when it connects to
 // acknowledge the connection and indicate server capabilities.
 message GatewayHandshake {

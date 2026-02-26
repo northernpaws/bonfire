@@ -1,4 +1,4 @@
-use std::io::Result;
+use std::{io::Result, path::PathBuf};
 
 fn main() -> Result<()> {
     let mut config = prost_build::Config::new();
@@ -22,9 +22,10 @@ fn main() -> Result<()> {
         "#[serde(tag = \"type\")]",
     );
 
+    let out_dir: PathBuf = std::env::var("OUT_DIR").unwrap().into();
+
     // Generate the descriptor path so we can use it for API docs generation.
-    let descriptor_path = std::path::Path::new("book/proto/".into()).join("descriptor_set.pb");
-    config.file_descriptor_set_path(&descriptor_path);
+    config.file_descriptor_set_path(&out_dir.join("proto_file_descriptor_set.pb"));
 
     // Compile the specified protobuf files into Rust code.
     config.compile_protos(&["src/proto/v0/gateway.proto"], &["src/proto"])?;
