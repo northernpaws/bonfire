@@ -1,11 +1,16 @@
 use tokio::sync::broadcast;
 
+use crate::server::channel::ChannelId;
+
 /// An event emitted by a voice channel.
 #[derive(Clone)]
 pub enum VoiceChannelEvent {}
 
 /// Provides a voice channel used for voice discussion between users.
 pub struct VoiceChannel {
+    /// Uniquely identifies the channel.
+    id: ChannelId,
+
     label: String,
 
     /// Receiver for events emitted by the channel.
@@ -16,12 +21,14 @@ pub struct VoiceChannel {
 }
 
 impl VoiceChannel {
-    pub fn new(label: String) -> Self {
+    /// Constructs a voice channel.
+    pub fn new(id: ChannelId, label: String) -> Self {
         let (event_sender, event_receiver) = broadcast::channel(25);
 
         // TODO: use rustrtc for voice comms
 
         Self {
+            id,
             label,
             event_receiver,
         }
@@ -30,6 +37,10 @@ impl VoiceChannel {
 
 impl super::Channel for VoiceChannel {
     type Event = VoiceChannelEvent;
+
+    fn channel_id(&self) -> super::ChannelId {
+        self.id
+    }
 
     fn channel_type(&self) -> super::ChannelType {
         super::ChannelType::Voice

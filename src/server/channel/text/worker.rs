@@ -46,7 +46,7 @@ pub async fn channel_worker(
                     DateTime::from_timestamp_secs(msg.timestamp_ms as i64),
                 );
                 document.add_text(field_content, msg.content.clone());
-                document.add_u64(field_author, msg.author);
+                document.add_u64(field_author, msg.author.0);
 
                 // Write the full-text search log entry.
                 if let Err(err) = index_writer.add_document(document) {

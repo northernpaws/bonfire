@@ -7,7 +7,7 @@ use oauth2::{
     reqwest,
 };
 
-use crate::server::auth;
+use crate::{server::auth, user::UserId};
 
 /// Configures an OAuth2 client that can be used for configuration.
 #[derive(Clone)]
@@ -75,6 +75,11 @@ pub struct AuthService {
 impl AuthService {
     pub fn new(config: AuthConfig) -> Self {
         Self { config }
+    }
+
+    /// Validates the supplied authentication token.
+    pub fn validate_token(&self, token: &String) -> Option<UserId> {
+        None
     }
 
     /// Generate an oauth2 authorization URL for the specified provider.

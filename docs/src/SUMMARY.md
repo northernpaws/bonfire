@@ -4,6 +4,9 @@
 
 # Features
 
+- [Emojis](./features/emojis.md)
+- [Text Channels](./features/text.md)
+
 # Administration
 
 - [Chapter 1](./chapter_1.md)

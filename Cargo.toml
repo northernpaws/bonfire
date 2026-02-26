@@ -6,6 +6,9 @@ edition = "2024"
 [[bin]]
 name = "bonfire"
 
+[features]
+default = ["server"]
+server = []
 
 [dependencies]
 anstyle = "^1.0"

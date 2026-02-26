@@ -22,11 +22,14 @@ message GatewayIdentify {
         NATIVE = 2;
     }
 
+    // Authentication token for the client's user.
+    string token = 1;
+
     // Identifies the type of the client.
-    ClientType client_type = 1;
+    ClientType client_type = 2;
 
     // User-agent like string identifying what the client is.
-    string client_agent = 2;
+    string client_agent = 3;
 }
 
 // An event sent from the gateway to connected clients.

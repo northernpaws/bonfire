@@ -1,5 +1,7 @@
 use tokio::sync::broadcast;
 
+use crate::channel::ChannelId;
+
 /// Indicates the type of a channel.
 pub enum ChannelType {
     Text,
@@ -10,6 +12,10 @@ pub enum ChannelType {
 pub trait Channel {
     type Event;
 
+    /// Returns the ID of the channel.
+    fn channel_id(&self) -> ChannelId;
+
+    /// Returns the type of the channel.
     fn channel_type(&self) -> ChannelType;
 
     /// Returns the user-friendly label for the channel.

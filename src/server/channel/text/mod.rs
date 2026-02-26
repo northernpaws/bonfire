@@ -4,11 +4,14 @@ use fjall::KeyspaceCreateOptions;
 use tantivy::{TantivyError, directory::error::OpenDirectoryError};
 use tokio::sync::broadcast;
 
-use crate::server::{
-    channel::text::search::{
-        SCHEMA_KEY_AUTHOR, SCHEMA_KEY_CONTENT, SCHEMA_KEY_TIMESTAMP, text_search_schema,
+use crate::{
+    server::channel::{
+        ChannelId,
+        text::search::{
+            SCHEMA_KEY_AUTHOR, SCHEMA_KEY_CONTENT, SCHEMA_KEY_TIMESTAMP, text_search_schema,
+        },
     },
-    user::UserID,
+    user::UserId,
 };
 
 pub mod search;
@@ -18,7 +21,7 @@ pub mod worker;
 #[derive(Clone)]
 pub struct TextChannelMessage {
     /// The author of the message.
-    pub author: UserID,
+    pub author: UserId,
     /// Timestamp in milliseconds.
     pub timestamp_ms: u64,
     /// Text body of the message.
@@ -74,6 +77,9 @@ pub type TextChannelSender = tachyonix::Sender<TextChannelAction>;
 
 /// A channel on a server.
 pub struct TextChannel {
+    /// The unique ID used to identify the channel.
+    id: ChannelId,
+
     /// User-facing label for the channel.
     label: String,
 
@@ -93,9 +99,9 @@ pub struct TextChannel {
 impl TextChannel {
     /// Constructs a new channel instance.
     pub fn new(
+        id: ChannelId,
         data_dir: &PathBuf,
         db: fjall::Database,
-        id: u64,
         label: String,
     ) -> Result<Self, TextChannelError> {
         if label.is_empty() {
@@ -106,7 +112,7 @@ impl TextChannel {
         //
         // This will create a new keyspace if none exists, or open an existing one.
         let keyspace = db
-            .keyspace(&id.to_string(), keyspace_create_options)
+            .keyspace(&id.0.to_string(), keyspace_create_options)
             .map_err(|e| TextChannelError::KeyspaceError(e))?;
 
         // Create the text search schema used for querying logs.
@@ -146,6 +152,7 @@ impl TextChannel {
         ));
 
         Ok(Self {
+            id,
             label,
             keyspace,
             message_sender,
@@ -162,6 +169,10 @@ impl TextChannel {
 
 impl super::Channel for TextChannel {
     type Event = TextChannelEvent;
+
+    fn channel_id(&self) -> ChannelId {
+        self.id
+    }
 
     fn channel_type(&self) -> super::ChannelType {
         super::ChannelType::Text

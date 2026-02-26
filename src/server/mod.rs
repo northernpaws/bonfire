@@ -6,10 +6,13 @@ use std::{
 
 use fjall::Database;
 
-use crate::server::{
-    auth::AuthService,
-    channel::text::{TextChannel, TextChannelError},
-    client::ClientService,
+use crate::{
+    channel::ChannelId,
+    server::{
+        auth::AuthService,
+        channel::text::{TextChannel, TextChannelError},
+        client::ClientService,
+    },
 };
 
 pub mod auth;
@@ -35,6 +38,8 @@ pub struct Config {
 pub struct Server {
     config: Config,
 
+    id_generator: snowflaked::Generator,
+
     /// FSM-tree database for storing the time-series channel messages.
     db: fjall::Database,
 
@@ -44,7 +49,7 @@ pub struct Server {
     clients: Arc<RwLock<ClientService>>,
 
     /// A hashmap of the available channels on the server.
-    text_channels: RwLock<HashMap<u64, Arc<TextChannel>>>,
+    text_channels: RwLock<HashMap<ChannelId, Arc<TextChannel>>>,
 }
 
 #[derive(Debug)]
@@ -82,6 +87,7 @@ impl Server {
 
         Ok(Self {
             config,
+            id_generator: snowflaked::Generator::new(0),
             db,
             auth,
             clients,
@@ -103,17 +109,18 @@ impl Server {
     ///
     /// Returns a handle to the created text channel.
     pub fn create_text_channel(
-        &self,
+        &mut self,
         label: String,
     ) -> Result<Arc<TextChannel>, CreateChannelError> {
-        let id = 0; // tODO: generate channel id
+        // Generate a channel ID.
+        let id: ChannelId = self.id_generator.generate();
 
         // Construct the data directory for the channel.
-        let data_dir = self.config.data_dir.join("channels").join(id.to_string());
+        let data_dir = self.config.data_dir.join("channels").join(id.0.to_string());
 
         // SAFETY: Fjall database is syncronized for thread-safe
         //  access and can be cloned without external locks.
-        let channel = Arc::new(TextChannel::new(&data_dir, self.db.clone(), id, label)?);
+        let channel = Arc::new(TextChannel::new(id, &data_dir, self.db.clone(), label)?);
 
         // Add the channel to the global channel list.
         self.text_channels
