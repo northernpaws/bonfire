@@ -22,7 +22,7 @@ use tracing::{Instrument, debug_span, info_span};
 use prost::Message;
 
 use crate::{
-    proto::v0::{self, GatewayServerEvent, gateway_client_event},
+    proto::v0::{self, GatewayServerEvent},
     server::client,
 };
 
@@ -36,15 +36,6 @@ pub enum Encoding {
     /// representation of the Protobuf specification.
     Json,
 }
-
-// impl tracing::Value for Encoding {
-//     fn record(&self, key: &tracing::field::Field, visitor: &mut dyn tracing::field::Visit) {
-//         match self {
-//             Encoding::Protobuf => visitor.record_str(key, "protobuf"),
-//             Encoding::Json => visitor.record_str(key, "json"),
-//         }
-//     }
-// }
 
 /// Query parameters supported by the gateway endpoint.
 #[derive(Deserialize)]
@@ -142,6 +133,8 @@ async fn handle_socket(
         .write()
         .unwrap()
         .server
+        .read()
+        .unwrap()
         .auth()
         .write()
         .unwrap()
@@ -162,6 +155,8 @@ async fn handle_socket(
         .write()
         .unwrap()
         .server
+        .read()
+        .unwrap()
         .clients()
         .write()
         .unwrap()

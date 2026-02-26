@@ -19,7 +19,7 @@ pub async fn handle_redirect(
     Path(provider): Path<String>,
     State(state): State<SharedState>,
 ) -> impl IntoResponse {
-    let auth = state.read().unwrap().server.auth();
+    let auth = state.read().unwrap().server.read().unwrap().auth();
 
     // Generate an authorization URL for the request.
     let Some(authorize_url) = auth.read().unwrap().oauth2_authorize_web(
@@ -45,7 +45,7 @@ pub async fn handle_callback(
     jar: CookieJar,
     State(state): State<SharedState>,
 ) -> impl IntoResponse {
-    let auth = state.read().unwrap().server.auth();
+    let auth = state.read().unwrap().server.read().unwrap().auth();
 
     // Extract the OAuth2 callback code and state supplied by the OAuth2 provider.
     let code = AuthorizationCode::new(query.0.code);

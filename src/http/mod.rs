@@ -17,13 +17,13 @@ pub mod oauth2;
 /// Provides the shared state for the app router.
 pub struct AppState {
     /// The application server
-    server: Arc<Server>,
+    server: Arc<RwLock<Server>>,
 }
 
 pub type SharedState = Arc<RwLock<AppState>>;
 
 /// Create the HTTP app router for the server.
-pub fn make_app_router(server: Arc<Server>) -> Router {
+pub fn make_app_router(server: Arc<RwLock<Server>>) -> Router {
     let state: SharedState = Arc::new(RwLock::new(AppState { server }));
 
     Router::new()
@@ -50,7 +50,7 @@ pub(crate) async fn handle_web_interface() -> impl IntoResponse {
 async fn handle_list_channels(State(state): State<SharedState>) -> impl IntoResponse {
     let state = state.read().unwrap();
 
-    let text_channels = state.server.text_channels();
+    let text_channels = state.server.read().unwrap().text_channels();
 
     let names: Vec<&str> = text_channels.iter().map(|c| c.get_label()).collect();
 
@@ -63,6 +63,8 @@ async fn handle_create_channel(State(state): State<SharedState>) -> impl IntoRes
 
     let channel = match state
         .server
+        .write()
+        .unwrap()
         .create_text_channel("todo-change-to-variable".to_string())
     {
         Ok(channel) => channel,
