@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::sync::{Arc, RwLock};
 
 use bonfire::{
     http,
@@ -64,7 +64,7 @@ async fn main() {
                 },
             };
 
-            let srv = Arc::new(server::Server::new(config).unwrap());
+            let srv = Arc::new(RwLock::new(server::Server::new(config).unwrap()));
 
             let app = http::make_app_router(srv);
 
