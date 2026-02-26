@@ -10,4 +10,3 @@ preferred-dark-theme = "ayu"
 git-repository-url = "https://github.com/northernpaws/bonfire"
 edit-url-template = "https://github.com/northernpaws/bonfire/main/book/{path}"
 playground.runnable = false
-additional-css = ["mdbook-protobuf.css"]
