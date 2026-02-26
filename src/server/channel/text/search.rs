@@ -1,3 +1,5 @@
+//! Full-text search functionality of text channel messages.
+
 use tantivy::schema::Schema;
 
 // keys used for the full-text schema fields.

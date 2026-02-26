@@ -1,3 +1,8 @@
+//! The client module provides the bulk of the client event
+//! processing and communication channels functionality.
+//!
+//! For each connection for a client to the server,
+
 use std::{
     collections::HashMap,
     hash::{self, Hasher},
@@ -141,14 +146,14 @@ impl Session {
 /// Service for managing clients.
 ///
 /// This maintains and manages client connection sessions.
-pub struct ClientService {
+pub struct GatewayService {
     id_generator: snowflaked::Generator,
 
-    /// Active client sessions.
+    /// Active gateway client sessions.
     sessions: RwLock<HashMap<SessionId, Arc<RwLock<Session>>>>,
 }
 
-impl ClientService {
+impl GatewayService {
     /// Construct a new instance of the client service.
     pub fn new() -> Self {
         Self {

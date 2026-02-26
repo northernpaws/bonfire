@@ -1,3 +1,5 @@
+//! Provides voice channel and calling functionality.
+
 use tokio::sync::broadcast;
 
 use crate::server::channel::ChannelId;

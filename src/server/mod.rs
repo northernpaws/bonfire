@@ -11,13 +11,13 @@ use crate::{
     server::{
         auth::AuthService,
         channel::text::{TextChannel, TextChannelError},
-        client::ClientService,
+        gateway::GatewayService,
     },
 };
 
 pub mod auth;
 pub mod channel;
-pub mod client;
+pub mod gateway;
 pub mod user;
 
 /// An event that occures on a server.
@@ -46,7 +46,7 @@ pub struct Server {
     /// Service for managing user authentication.
     auth: Arc<RwLock<AuthService>>,
     /// Service for managing connections to clients.
-    clients: Arc<RwLock<ClientService>>,
+    gateway: Arc<RwLock<GatewayService>>,
 
     /// A hashmap of the available channels on the server.
     text_channels: RwLock<HashMap<ChannelId, Arc<TextChannel>>>,
@@ -83,14 +83,14 @@ impl Server {
         let auth = Arc::new(RwLock::new(AuthService::new(config.auth.clone())));
 
         // Construct the service for managing connected client sessions.
-        let clients = Arc::new(RwLock::new(ClientService::new()));
+        let gateway = Arc::new(RwLock::new(GatewayService::new()));
 
         Ok(Self {
             config,
             id_generator: snowflaked::Generator::new(0),
             db,
             auth,
-            clients,
+            gateway,
             text_channels: RwLock::new(HashMap::new()),
         })
     }
@@ -101,8 +101,8 @@ impl Server {
     }
 
     /// Returns a handle to the client service.
-    pub fn clients(&self) -> Arc<RwLock<ClientService>> {
-        Arc::clone(&self.clients)
+    pub fn gateway(&self) -> Arc<RwLock<GatewayService>> {
+        Arc::clone(&self.gateway)
     }
 
     /// Create a new text channel on the server.

@@ -1,5 +1,7 @@
+//! The common types for users.
+//!
 use std::{
-    fmt::{Display, Write},
+    fmt::Display,
     hash::{self, Hasher},
     num::ParseIntError,
     str::FromStr,
@@ -11,12 +13,14 @@ use snowflaked::Snowflake;
 #[derive(PartialEq, Eq, Copy, Clone, Debug)]
 pub struct UserId(pub u64);
 
+/// Enables for using the ID's for keys in HashMaps.
 impl hash::Hash for UserId {
     fn hash<H: Hasher>(&self, state: &mut H) {
         state.write_u64(self.0);
     }
 }
 
+/// Enables extracting the snowflake ID components from IDs.
 impl Snowflake for UserId {
     fn from_parts(timestamp: u64, instance: u64, sequence: u64) -> Self {
         Self(u64::from_parts(timestamp, instance, sequence))
@@ -35,6 +39,7 @@ impl Snowflake for UserId {
     }
 }
 
+/// Display IDs in logs and formatting strings.
 impl Display for UserId {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.write_str(self.0.to_string().as_str())

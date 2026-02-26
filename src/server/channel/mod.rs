@@ -1,3 +1,8 @@
+//! Module for text and voice channel functionality.
+//!
+//! The channel types (voice and text) get their own
+//! submodules that encapsulate their functionality.
+
 use tokio::sync::broadcast;
 
 use crate::channel::ChannelId;

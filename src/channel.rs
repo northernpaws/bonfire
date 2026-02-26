@@ -1,3 +1,5 @@
+//! The common types for channels.
+
 use std::{
     fmt::Display,
     hash::{self, Hasher},
@@ -11,12 +13,14 @@ use snowflaked::Snowflake;
 #[derive(PartialEq, Eq, Copy, Clone, Debug)]
 pub struct ChannelId(pub u64);
 
+/// Enables for using the ID's for keys in HashMaps.
 impl hash::Hash for ChannelId {
     fn hash<H: Hasher>(&self, state: &mut H) {
         state.write_u64(self.0);
     }
 }
 
+/// Enables extracting the snowflake ID components from IDs.
 impl Snowflake for ChannelId {
     fn from_parts(timestamp: u64, instance: u64, sequence: u64) -> Self {
         Self(u64::from_parts(timestamp, instance, sequence))
@@ -35,6 +39,7 @@ impl Snowflake for ChannelId {
     }
 }
 
+/// Display IDs in logs and formatting strings.
 impl Display for ChannelId {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.write_str(self.0.to_string().as_str())

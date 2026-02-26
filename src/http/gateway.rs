@@ -23,7 +23,7 @@ use prost::Message;
 
 use crate::{
     proto::v0::{self, GatewayServerEvent},
-    server::client,
+    server::gateway,
 };
 
 /// Identifies the encoding used by the gateway.
@@ -157,7 +157,7 @@ async fn handle_socket(
         .server
         .read()
         .unwrap()
-        .clients()
+        .gateway()
         .write()
         .unwrap()
         .create_session(user_id, identity.clone());
@@ -307,7 +307,7 @@ async fn receive_identity_message(socket: &mut WebSocket) -> Option<v0::GatewayI
 /// Task used to handle the sending gateway messages from the session to the client.
 async fn task_send(
     mut sender: SplitSink<WebSocket, ws::Message>,
-    session: Arc<RwLock<client::Session>>,
+    session: Arc<RwLock<gateway::Session>>,
     encoding: Encoding,
 ) {
     // Get a receiver for server-generated gateway events for the session.
@@ -362,7 +362,7 @@ async fn task_send(
 /// Task used to handle ingesting gateway messages from the client.
 async fn task_receive(
     mut receiver: SplitStream<WebSocket>,
-    session: Arc<RwLock<client::Session>>,
+    session: Arc<RwLock<gateway::Session>>,
     _encoding: Encoding,
 ) {
     // Get a channel sender for ingesting received client events to the server.

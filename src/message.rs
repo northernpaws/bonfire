@@ -1,4 +1,4 @@
-//! Message formatting utilities.
+//! The common types for messages, including message encoding and decoding.
 
 use crate::{channel::ChannelId, role::RoleId, user::UserId};
 

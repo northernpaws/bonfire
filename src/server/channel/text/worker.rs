@@ -1,3 +1,8 @@
+//! Provides the task worker for text channels
+//!
+//! A new worker task is spawned for every active
+//! text channel on the server.
+
 use tantivy::{DateTime, TantivyDocument};
 use tokio::sync::broadcast;
 use tracing::{Instrument, info_span};

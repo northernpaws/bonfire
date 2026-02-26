@@ -1,3 +1,5 @@
+//! Provides text channel functionality.
+
 use std::{io, path::PathBuf};
 
 use fjall::KeyspaceCreateOptions;
